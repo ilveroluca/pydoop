@@ -229,13 +229,15 @@ function install_cdh4() {
     sudo apt-get update
 
 
-    if [[ "${Yarn}" == false ]]; then
-        log "Installing hadoop MR1"
-        sudo -E apt-get install hadoop-0.20-conf-pseudo
-    else
-        log "Installing hadoop MR2 (YARN)"
-        sudo -E apt-get install hadoop-conf-pseudo
-    fi
+    #if [[ "${Yarn}" == false ]]; then
+    #    log "Installing hadoop MR1"
+    #    sudo -E apt-get install hadoop-0.20-conf-pseudo
+    #else
+    #    log "Installing hadoop MR2 (YARN)"
+    #    sudo -E apt-get install hadoop-conf-pseudo
+    #fi
+		# install both hadoop MR1 and MR2
+		sudo -E apt-get install  hadoop-0.20-conf-pseudo hadoop-conf-pseudo
 
     log "Updating configuration files"
     update_cdh_config_files "${HadoopVersion}" "${Yarn}" "${HadoopConfDir}"
