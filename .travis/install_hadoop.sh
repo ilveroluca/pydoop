@@ -170,6 +170,7 @@ function update_cdh_config_files(){
 
     # update the hadoop_env
     echo "export JAVA_HOME=$JAVA_HOME" >> "${HadoopConfDir}/hadoop-env.sh"
+    echo "export LIBHDFS_OPTS='-Xmx128m'" >> "${HadoopConfDir}/hadoop-env.sh"
 }
 
 
