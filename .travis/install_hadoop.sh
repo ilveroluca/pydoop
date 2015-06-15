@@ -154,6 +154,20 @@ function update_cdh_config_files(){
     # make configuration files editable by everyone to simplify setting up the machine... :-/
     sudo chmod -R 777 "${HadoopConfDir}"
 
+    # CDH5 sets clients to ask for 512 MB of heap memory.  That's too much for the current Travis VMs
+    sudo sed -i \
+      -e '/^export HADOOP_[A-Z]\+_OPTS/s/-Xmx[0-9]\+m\>/-Xmx128m/' \
+      -e '/HADOOP_.*HEAPSIZE=/s/^.*\(\<HADOOP_[A-Z_]*HEAPSIZE\)=.*/export \1=400/'
+      "${HadoopConfDir}/hadoop-env.sh"
+
+    sudo sed -i \
+      -e '/\<YARN_.*HEAPSIZE=/s/^.*\(\<YARN_[A-Z_]*HEAPSIZE\)=.*/export \1=256/'
+      "${HadoopConfDir}/yarn-env.sh"
+
+    sudo sed -i \
+      -e '/HADOOP_JOB_HISTORYSERVER_HEAPSIZE/s/\<HADOOP_JOB_HISTORYSERVER_HEAPSIZE=.*/HADOOP_JOB_HISTORYSERVER_HEAPSIZE=256/'
+      "${HadoopConfDir}/mapred-env.sh"
+
     if [[ "${Yarn}" == true ]]; then  # MRv2 (YARN)
         ## hdfs-site.xml
         sudo sed '/\/configuration/ i\<property><name>dfs.permissions.supergroup<\/name><value>admin<\/value><\/property><property><name>dfs.namenode.fs-limits.min-block-size</name><value>512</value></property>' <  /etc/hadoop/conf/hdfs-site.xml > /tmp/hdfs-site.xml;
@@ -170,7 +184,6 @@ function update_cdh_config_files(){
 
     # update the hadoop_env
     echo "export JAVA_HOME=$JAVA_HOME" >> "${HadoopConfDir}/hadoop-env.sh"
-    echo "export LIBHDFS_OPTS='-Xmx128m'" >> "${HadoopConfDir}/hadoop-env.sh"
 }
 
 
