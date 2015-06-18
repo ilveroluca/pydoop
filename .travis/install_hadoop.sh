@@ -156,8 +156,11 @@ function update_cdh_config_files(){
 
     # CDH5 sets clients to ask for 512 MB of heap memory.  That's too much for the current Travis VMs
     sudo sed -i \
-      -e '/^export HADOOP_[A-Z]\+_OPTS/s/-Xmx[0-9]\+m\>/-Xmx196m/' \
-      -e '/HADOOP_.*HEAPSIZE=/s/^.*\(\<HADOOP_[A-Z_]*HEAPSIZE\)=.*/export \1=500/'
+      -e '/^export HADOOP_[A-Z]\+_OPTS/s/-Xmx[0-9]\+m\>/-Xmx128m/' \
+      -e '/HADOOP_.*HEAPSIZE=/s/^.*\(\<HADOOP_[A-Z_]*HEAPSIZE\)=.*/export \1=400/'
+      -e '$a\
+export LIBHDFS_OPTS="-Xmx96m"\
+' \
       "${HadoopConfDir}/hadoop-env.sh"
 
     sudo sed -i \
@@ -165,7 +168,10 @@ function update_cdh_config_files(){
       "${HadoopConfDir}/yarn-env.sh"
 
     sudo sed -i \
-      -e '/HADOOP_JOB_HISTORYSERVER_HEAPSIZE/s/\<HADOOP_JOB_HISTORYSERVER_HEAPSIZE=.*/HADOOP_JOB_HISTORYSERVER_HEAPSIZE=256/'
+      -e '/HADOOP_JOB_HISTORYSERVER_HEAPSIZE/s/\<HADOOP_JOB_HISTORYSERVER_HEAPSIZE=.*/HADOOP_JOB_HISTORYSERVER_HEAPSIZE=256/' \
+      -e '$a\
+export LIBHDFS_OPTS="-Xmx96m"\
+' \
       "${HadoopConfDir}/mapred-env.sh"
 
     if [[ "${Yarn}" == true ]]; then  # MRv2 (YARN)
