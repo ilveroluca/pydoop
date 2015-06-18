@@ -156,8 +156,8 @@ function update_cdh_config_files(){
 
     # CDH5 sets clients to ask for 512 MB of heap memory.  That's too much for the current Travis VMs
     sudo sed -i \
-      -e '/^export HADOOP_[A-Z]\+_OPTS/s/-Xmx[0-9]\+m\>/-Xmx128m/' \
-      -e '/HADOOP_.*HEAPSIZE=/s/^.*\(\<HADOOP_[A-Z_]*HEAPSIZE\)=.*/export \1=400/'
+      -e '/^export HADOOP_[A-Z]\+_OPTS/s/-Xmx[0-9]\+m\>/-Xmx196m/' \
+      -e '/HADOOP_.*HEAPSIZE=/s/^.*\(\<HADOOP_[A-Z_]*HEAPSIZE\)=.*/export \1=500/'
       "${HadoopConfDir}/hadoop-env.sh"
 
     sudo sed -i \
